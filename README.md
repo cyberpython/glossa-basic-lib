@@ -6,9 +6,9 @@ This is a minimal library of external subprograms for use with glossa-interprete
 
 Build with 
 
-    ant clean jar
+    ./gradlew clean build
 
-and move the resulting JAR file from the dist directory to:
+and move the resulting JAR file from the `build/libs` directory to:
 
     ~/ΒΙΒΛΙΟΘΗΚΗ_ΓΛΩΣΣΑΣ
 
@@ -19,9 +19,9 @@ From this point on you shall be able to call the included subprograms from your 
 
 Μία πολύ απλή βιβλιοθήκη πολύ βασικών υποπρογραμμάτων για τη ΓΛΩΣΣΑ. Για τη δημιουργία του JAR δίνετε:
 
-    ant clean jar
+    ./gradlew clean build
 
-και μεταφέρετε το αρχείο JAR που παράγεται από τον κατάλογο dist στον κατάλογο
+και μεταφέρετε το αρχείο JAR που παράγεται από τον κατάλογο `build/libs` στον κατάλογο
 
     ~/ΒΙΒΛΙΟΘΗΚΗ_ΓΛΩΣΣΑΣ
 

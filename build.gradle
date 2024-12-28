@@ -1,0 +1,81 @@
+plugins {
+    // Apply the java-library plugin for API and implementation separation.
+    id 'java-library'
+
+    id("maven-publish")
+}
+
+repositories {
+    // Use Maven Central for resolving dependencies.
+    mavenCentral()
+    maven {
+        name = "Forgejo"
+        // allowInsecureProtocol = true
+        url "https://maven.pkg.github.com/cyberpython/glossa-interpreter"
+        
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+            password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+        }
+    }
+}
+
+dependencies {
+    // Use JUnit Jupiter for testing.
+    testImplementation libs.junit.jupiter
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
+    implementation 'com.gmigdos.glossa:glossa-interpreter:2.0.0'
+}
+
+group = 'com.gmigdos.glossa'
+version = '2.0.0'
+
+// Apply a specific Java toolchain to ease working on different environments.
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks.named('test') {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
+
+publishing {
+    repositories {
+        
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/cyberpython/glossa-basic-lib")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+
+        maven {
+            name = "Forgejo"
+            allowInsecureProtocol = true
+            url = uri("${project.findProperty("forgejo.base_url")}/api/packages/${project.findProperty("forgejo.user")}/maven")
+
+            credentials(HttpHeaderCredentials) {
+                name = "Authorization"
+                value = "token ${project.findProperty('forgejo.token')}"
+            }
+
+            authentication {
+                header(HttpHeaderAuthentication)
+            }
+        }
+    }
+    publications {
+        glossa(MavenPublication) {
+            from(components.java)
+            artifactId = 'glossa-basic-lib'
+        }
+    }
+}
